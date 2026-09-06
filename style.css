@@ -251,4 +251,18 @@ footer {
   .nav a {
     font-size: 12px;
   }
+
+  .card h3 {
+    margin-top: 22px;
+    margin-bottom: 6px;
+    font-size: 17px;
+  }
+
+  .card ul {
+    padding-left: 22px;
+  }
+
+  .card li {
+    margin: 5px 0;
+  }
 }
