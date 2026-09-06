@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jkgy4luuuuuu.github.io/university-tools/sitemap.xml
