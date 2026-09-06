@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>あと何回授業を休める？｜大学の出席率計算ツール</title>
+
+  <meta
+    name="description"
+    content="大学の授業をあと何回休めるか簡単計算。授業回数・必要出席率・現在の欠席回数を入力すると、残りの欠席可能回数と現在の出席率を計算できます。"
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans JP",
+        sans-serif;
+      background: #f5f7fa;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: min(700px, 92%);
+      margin: 40px auto;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 28px;
+      line-height: 1.4;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .description {
+      color: #666;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
+
+    .result {
+      display: none;
+    }
+
+    .result-main {
+      font-size: 30px;
+      font-weight: bold;
+      margin: 10px 0 20px;
+    }
+
+    .result-details {
+      background: #f5f7fa;
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .result-details p {
+      margin: 6px 0;
+    }
+
+    .success {
+      color: #15803d;
+    }
+
+    .warning {
+      color: #b45309;
+    }
+
+    .danger {
+      color: #b91c1c;
+    }
+
+    .error {
+      color: #b91c1c;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .notice {
+      color: #777;
+      font-size: 13px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 18px;
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin-top: 20px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .result-main {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <a class="back-link" href="index.html">
+      ← 期末試験の必要点数計算へ
+    </a>
+
+    <section class="card">
+      <h1>あと何回授業を休める？</h1>
+
+      <p class="description">
+        授業の総回数と必要な出席率、現在の欠席回数を入力すると、
+        あと何回欠席できるか計算します。
+      </p>
+    </section>
+
+    <section class="card">
+
+      <div class="field">
+        <label for="totalClasses">授業の総回数</label>
+        <input
+          id="totalClasses"
+          type="number"
+          value="15"
+          min="1"
+          step="1"
+        >
+      </div>
+
+      <div class="field">
+        <label for="requiredAttendance">必要な出席率（%）</label>
+        <input
+          id="requiredAttendance"
+          type="number"
+          value="67"
+          min="0"
+          max="100"
+          step="0.1"
+        >
+      </div>
+
+      <div class="field">
+        <label for="currentAbsences">現在の欠席回数</label>
+        <input
+          id="currentAbsences"
+          type="number"
+          value="2"
+          min="0"
+          step="1"
+        >
+      </div>
+
+      <button id="calculate" type="button">
+        あと何回休めるか計算
+      </button>
+
+      <div id="error" class="error"></div>
+
+    </section>
+
+    <section id="result" class="card result">
+
+      <h2>計算結果</h2>
+
+      <div
+        id="resultMessage"
+        class="result-main"
+      ></div>
+
+      <div class="result-details">
+
+        <p>
+          最大欠席可能回数：
+          <strong id="maxAbsences"></strong>
+        </p>
+
+        <p>
+          現在の欠席回数：
+          <strong id="shownCurrentAbsences"></strong>
+        </p>
+
+        <p>
+          現在の出席率：
+          <strong id="currentAttendanceRate"></strong>
+        </p>
+
+        <p>
+          必要な出席回数：
+          <strong id="requiredAttendanceCount"></strong>
+        </p>
+
+      </div>
+
+    </section>
+
+    <section class="card">
+
+      <h2>計算方法</h2>
+
+      <p>
+        必要な出席回数は、
+        「授業の総回数 × 必要な出席率」から計算しています。
+      </p>
+
+      <p>
+        例えば全15回の授業で、3分の2以上の出席が必要な場合、
+        必要な出席回数は10回です。
+      </p>
+
+      <p class="notice">
+        ※大学や授業によっては「欠席5回で失格」「遅刻3回で欠席1回扱い」
+        など独自のルールがあります。
+        実際の履修条件は必ずシラバスや大学の規定を確認してください。
+      </p>
+
+    </section>
+
+  </main>
+
+  <footer>
+    大学生向け単位・成績計算ツール
+  </footer>
+
+<script>
+
+const calculateButton =
+  document.getElementById("calculate");
+
+calculateButton.addEventListener(
+  "click",
+  calculateAttendance
+);
+
+function calculateAttendance() {
+
+  const totalClasses =
+    Number(
+      document.getElementById("totalClasses").value
+    );
+
+  const requiredAttendance =
+    Number(
+      document.getElementById("requiredAttendance").value
+    );
+
+  const currentAbsences =
+    Number(
+      document.getElementById("currentAbsences").value
+    );
+
+  const error =
+    document.getElementById("error");
+
+  error.textContent = "";
+
+
+  if (
+    !Number.isFinite(totalClasses) ||
+    !Number.isFinite(requiredAttendance) ||
+    !Number.isFinite(currentAbsences) ||
+    totalClasses <= 0 ||
+    requiredAttendance < 0 ||
+    requiredAttendance > 100 ||
+    currentAbsences < 0
+  ) {
+
+    error.textContent =
+      "入力内容を正しく確認してください。";
+
+    return;
+
+  }
+
+
+  if (currentAbsences > totalClasses) {
+
+    error.textContent =
+      "欠席回数が授業の総回数を超えています。";
+
+    return;
+
+  }
+
+
+  const requiredAttendanceCount =
+    Math.ceil(
+      totalClasses * (requiredAttendance / 100)
+    );
+
+  const maxAbsences =
+    totalClasses - requiredAttendanceCount;
+
+  const remainingAbsences =
+    maxAbsences - currentAbsences;
+
+  const currentAttendanceCount =
+    totalClasses - currentAbsences;
+
+  const currentAttendanceRate =
+    (currentAttendanceCount / totalClasses) * 100;
+
+
+  const result =
+    document.getElementById("result");
+
+  const message =
+    document.getElementById("resultMessage");
+
+  message.className =
+    "result-main";
+
+
+  if (remainingAbsences > 1) {
+
+    message.textContent =
+      `あと ${remainingAbsences}回 休めます`;
+
+    message.classList.add("success");
+
+  }
+
+  else if (remainingAbsences === 1) {
+
+    message.textContent =
+      "あと1回だけ休めます";
+
+    message.classList.add("warning");
+
+  }
+
+  else if (remainingAbsences === 0) {
+
+    message.textContent =
+      "これ以上休むと出席条件を下回ります";
+
+    message.classList.add("warning");
+
+  }
+
+  else {
+
+    message.textContent =
+      "すでに必要な出席条件を下回っています";
+
+    message.classList.add("danger");
+
+  }
+
+
+  document
+    .getElementById("maxAbsences")
+    .textContent =
+    `${maxAbsences}回`;
+
+
+  document
+    .getElementById("shownCurrentAbsences")
+    .textContent =
+    `${currentAbsences}回`;
+
+
+  document
+    .getElementById("currentAttendanceRate")
+    .textContent =
+    `${formatNumber(currentAttendanceRate)}%`;
+
+
+  document
+    .getElementById("requiredAttendanceCount")
+    .textContent =
+    `${requiredAttendanceCount}回`;
+
+
+  result.style.display = "block";
+
+  result.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+
+function formatNumber(number) {
+
+  return Number(
+    number.toFixed(1)
+  ).toString();
+
+}
+
+</script>
+
+</body>
+</html>
