@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>期末試験で何点必要？｜大学の単位・成績計算ツール</title>
+
+  <meta
+    name="description"
+    content="大学の単位取得に必要な期末試験の点数を簡単計算。小テスト・レポート・出席点など現在の得点と配点を入力するだけで、期末試験で何点必要か計算できます。"
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans JP",
+        sans-serif;
+      background: #f5f7fa;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: min(700px, 92%);
+      margin: 40px auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-top: 0;
+      line-height: 1.4;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-top: 0;
+    }
+
+    .description {
+      color: #666;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: end;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .add-button {
+      background: #e9eef5;
+      color: #333;
+    }
+
+    .calculate-button {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .delete-button {
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 12px;
+    }
+
+    .result {
+      display: none;
+    }
+
+    .result-main {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .result-details {
+      background: #f5f7fa;
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .result-details p {
+      margin: 5px 0;
+    }
+
+    .success {
+      color: #15803d;
+    }
+
+    .warning {
+      color: #b45309;
+    }
+
+    .danger {
+      color: #b91c1c;
+    }
+
+    .error {
+      color: #b91c1c;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .notice {
+      font-size: 13px;
+      color: #777;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      padding: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin-top: 20px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .score-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .score-row .name {
+        grid-column: 1 / -1;
+      }
+
+      .delete-button {
+        grid-column: 1 / -1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <section class="card">
+      <h1>期末試験で何点必要？</h1>
+
+      <p class="description">
+        小テスト・レポート・出席点など、すでに確定している点数を入力すると、
+        単位取得に必要な期末試験の点数を計算します。
+      </p>
+    </section>
+
+    <section class="card">
+
+      <div class="field">
+        <label for="passScore">合格に必要な総合点</label>
+        <input
+          type="number"
+          id="passScore"
+          value="60"
+          min="0"
+          step="0.1"
+        >
+      </div>
+
+      <h2>現在までの成績</h2>
+
+      <div id="scoreRows">
+
+        <div class="score-row">
+          <input
+            class="name"
+            type="text"
+            value="小テスト"
+            placeholder="項目名"
+          >
+
+          <div>
+            <label>配点</label>
+            <input
+              class="max-score"
+              type="number"
+              value="20"
+              min="0"
+              step="0.1"
+            >
+          </div>
+
+          <div>
+            <label>得点</label>
+            <input
+              class="earned-score"
+              type="number"
+              value="15"
+              min="0"
+              step="0.1"
+            >
+          </div>
+
+          <button class="delete-button" type="button">
+            削除
+          </button>
+        </div>
+
+        <div class="score-row">
+          <input
+            class="name"
+            type="text"
+            value="レポート"
+            placeholder="項目名"
+          >
+
+          <div>
+            <label>配点</label>
+            <input
+              class="max-score"
+              type="number"
+              value="30"
+              min="0"
+              step="0.1"
+            >
+          </div>
+
+          <div>
+            <label>得点</label>
+            <input
+              class="earned-score"
+              type="number"
+              value="21"
+              min="0"
+              step="0.1"
+            >
+          </div>
+
+          <button class="delete-button" type="button">
+            削除
+          </button>
+        </div>
+
+      </div>
+
+      <button
+        id="addRow"
+        class="add-button"
+        type="button"
+      >
+        ＋ 評価項目を追加
+      </button>
+
+      <div class="field" style="margin-top: 25px;">
+        <label for="finalMax">期末試験の配点</label>
+
+        <input
+          type="number"
+          id="finalMax"
+          value="50"
+          min="0"
+          step="0.1"
+        >
+      </div>
+
+      <button
+        id="calculate"
+        class="calculate-button"
+        type="button"
+      >
+        必要な点数を計算
+      </button>
+
+      <div id="error" class="error"></div>
+
+    </section>
+
+    <section
+      id="result"
+      class="card result"
+    >
+
+      <h2>計算結果</h2>
+
+      <div
+        id="resultMessage"
+        class="result-main"
+      ></div>
+
+      <div class="result-details">
+
+        <p>
+          現在の確定点：
+          <strong id="currentScore"></strong>
+        </p>
+
+        <p>
+          期末試験の配点：
+          <strong id="finalScoreMax"></strong>
+        </p>
+
+        <p>
+          必要得点率：
+          <strong id="requiredPercent"></strong>
+        </p>
+
+      </div>
+
+    </section>
+
+    <section class="card">
+
+      <h2>使い方</h2>
+
+      <p>
+        シラバスに書かれている成績評価の配点を確認し、
+        現在までに確定している得点を入力してください。
+      </p>
+
+      <p>
+        例えば「小テスト20点、レポート30点、期末試験50点」
+        という授業なら、それぞれの得点を入力することで、
+        期末試験で何点必要なのか計算できます。
+      </p>
+
+      <p class="notice">
+        ※このツールは簡易計算用です。
+        実際の単位認定条件、出席条件、必須試験などについては、
+        所属大学・授業のシラバスを必ず確認してください。
+      </p>
+
+    </section>
+
+  </main>
+
+  <footer>
+    大学生向け単位・成績計算ツール
+  </footer>
+
+<script>
+
+const scoreRows = document.getElementById("scoreRows");
+const addRowButton = document.getElementById("addRow");
+
+function setupDeleteButtons() {
+
+  document.querySelectorAll(".delete-button")
+    .forEach(button => {
+
+      button.onclick = function () {
+        this.closest(".score-row").remove();
+      };
+
+    });
+
+}
+
+setupDeleteButtons();
+
+addRowButton.addEventListener("click", () => {
+
+  const row = document.createElement("div");
+
+  row.className = "score-row";
+
+  row.innerHTML = `
+    <input
+      class="name"
+      type="text"
+      placeholder="項目名"
+    >
+
+    <div>
+      <label>配点</label>
+      <input
+        class="max-score"
+        type="number"
+        min="0"
+        step="0.1"
+      >
+    </div>
+
+    <div>
+      <label>得点</label>
+      <input
+        class="earned-score"
+        type="number"
+        min="0"
+        step="0.1"
+      >
+    </div>
+
+    <button
+      class="delete-button"
+      type="button"
+    >
+      削除
+    </button>
+  `;
+
+  scoreRows.appendChild(row);
+
+  setupDeleteButtons();
+
+});
+
+
+document
+  .getElementById("calculate")
+  .addEventListener("click", calculate);
+
+
+function calculate() {
+
+  const error = document.getElementById("error");
+  error.textContent = "";
+
+  const passScore =
+    Number(document.getElementById("passScore").value);
+
+  const finalMax =
+    Number(document.getElementById("finalMax").value);
+
+
+  if (
+    !Number.isFinite(passScore) ||
+    !Number.isFinite(finalMax) ||
+    passScore < 0 ||
+    finalMax <= 0
+  ) {
+
+    error.textContent =
+      "合格点と期末試験の配点を正しく入力してください。";
+
+    return;
+
+  }
+
+
+  let currentScore = 0;
+
+  const rows =
+    document.querySelectorAll(".score-row");
+
+
+  for (const row of rows) {
+
+    const max =
+      Number(
+        row.querySelector(".max-score").value
+      );
+
+    const earned =
+      Number(
+        row.querySelector(".earned-score").value
+      );
+
+
+    if (
+      !Number.isFinite(max) ||
+      !Number.isFinite(earned) ||
+      max < 0 ||
+      earned < 0
+    ) {
+
+      error.textContent =
+        "配点と得点を正しく入力してください。";
+
+      return;
+
+    }
+
+
+    if (earned > max) {
+
+      error.textContent =
+        "得点が配点を超えている項目があります。";
+
+      return;
+
+    }
+
+
+    currentScore += earned;
+
+  }
+
+
+  const required =
+    passScore - currentScore;
+
+
+  const result =
+    document.getElementById("result");
+
+  const resultMessage =
+    document.getElementById("resultMessage");
+
+  resultMessage.className =
+    "result-main";
+
+
+  document.getElementById("currentScore")
+    .textContent =
+    `${formatNumber(currentScore)}点`;
+
+
+  document.getElementById("finalScoreMax")
+    .textContent =
+    `${formatNumber(finalMax)}点`;
+
+
+  if (required <= 0) {
+
+    resultMessage.textContent =
+      "すでに合格点に到達しています！";
+
+    resultMessage.classList.add("success");
+
+    document.getElementById("requiredPercent")
+      .textContent = "0%";
+
+  }
+
+  else if (required > finalMax) {
+
+    resultMessage.textContent =
+      `期末試験だけでは合格点に届きません`;
+
+    resultMessage.classList.add("danger");
+
+    const percent =
+      (required / finalMax) * 100;
+
+    document.getElementById("requiredPercent")
+      .textContent =
+      `${formatNumber(percent)}%`;
+
+  }
+
+  else {
+
+    const percent =
+      (required / finalMax) * 100;
+
+    resultMessage.textContent =
+      `期末試験で ${formatNumber(required)}点 必要です`;
+
+    if (percent >= 80) {
+      resultMessage.classList.add("warning");
+    }
+    else {
+      resultMessage.classList.add("success");
+    }
+
+    document.getElementById("requiredPercent")
+      .textContent =
+      `${formatNumber(percent)}%`;
+
+  }
+
+
+  result.style.display = "block";
+
+  result.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+
+function formatNumber(number) {
+
+  return Number(
+    number.toFixed(2)
+  ).toString();
+
+}
+
+</script>
+
+</body>
+</html>
