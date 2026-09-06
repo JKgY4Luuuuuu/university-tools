@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+卒業まであと何単位？｜大学の残り単位計算
+</title>
+
+<meta
+  name="description"
+  content="卒業に必要な単位数と現在取得済みの単位数から、卒業まであと何単位必要か簡単に計算できます。"
+>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header class="site-header">
+
+<div class="header-inner">
+
+<h2 class="site-title">
+<a href="index.html">
+大学生向け計算ツール
+</a>
+</h2>
+
+<nav class="nav">
+<a href="final-exam.html">期末試験</a>
+<a href="attendance.html">出席</a>
+<a href="gpa-target.html">GPA</a>
+<a href="credits-drop.html">落とせる単位</a>
+<a href="credits-graduation.html">卒業単位</a>
+</nav>
+
+</div>
+
+</header>
+
+
+<main class="container">
+
+<section class="card">
+
+<h1>
+卒業まであと何単位？
+</h1>
+
+<p class="description">
+現在取得している単位から、
+卒業までにあと何単位必要か計算します。
+</p>
+
+</section>
+
+
+<section class="card">
+
+<div class="field">
+
+<label>
+卒業に必要な単位
+</label>
+
+<input
+  id="requiredCredits"
+  type="number"
+  value="124"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+現在取得済みの単位
+</label>
+
+<input
+  id="completedCredits"
+  type="number"
+  value="38"
+>
+
+</div>
+
+
+<button id="calculate">
+残り単位を計算
+</button>
+
+<div id="error" class="error"></div>
+
+</section>
+
+
+<section
+  id="result"
+  class="card result"
+>
+
+<h2>計算結果</h2>
+
+<div
+  id="resultMessage"
+  class="result-main"
+></div>
+
+<div class="result-details">
+
+<p>
+取得済み：
+<strong id="shownCompleted"></strong>
+</p>
+
+<p>
+卒業必要：
+<strong id="shownRequired"></strong>
+</p>
+
+<p>
+進捗率：
+<strong id="progressRate"></strong>
+</p>
+
+</div>
+
+</section>
+
+
+<section class="card">
+
+<h2>注意</h2>
+
+<p class="notice">
+総単位数を満たしていても、
+必修・選択必修・卒業研究などの要件を満たしていない場合、
+卒業できないことがあります。
+必ず大学の履修要項を確認してください。
+</p>
+
+</section>
+
+
+<section class="card tool-links">
+
+<h2>関連ツール</h2>
+
+<a href="final-exam.html">
+期末試験で何点必要？
+</a>
+
+<a href="attendance.html">
+あと何回授業を休める？
+</a>
+
+<a href="gpa-target.html">
+目標GPAまであとどれくらい？
+</a>
+
+<a href="credits-drop.html">
+あと何単位落とせる？
+</a>
+
+</section>
+
+</main>
+
+
+<footer>
+大学生向け計算ツール
+</footer>
+
+
+<script>
+
+document
+.getElementById("calculate")
+.addEventListener("click", calculate);
+
+
+function calculate() {
+
+  const required =
+    Number(
+      document.getElementById("requiredCredits").value
+    );
+
+  const completed =
+    Number(
+      document.getElementById("completedCredits").value
+    );
+
+  const error =
+    document.getElementById("error");
+
+  error.textContent = "";
+
+
+  if (
+    required <= 0 ||
+    completed < 0
+  ) {
+
+    error.textContent =
+      "入力内容を確認してください。";
+
+    return;
+  }
+
+
+  const remaining =
+    Math.max(
+      required - completed,
+      0
+    );
+
+
+  const progress =
+    Math.min(
+      completed / required * 100,
+      100
+    );
+
+
+  const message =
+    document.getElementById("resultMessage");
+
+  message.className =
+    "result-main";
+
+
+  if (remaining === 0) {
+
+    message.textContent =
+      "総単位数上は卒業必要単位に到達しています";
+
+    message.classList.add("success");
+
+  }
+
+  else {
+
+    message.textContent =
+      "卒業まであと " +
+      remaining +
+      "単位 必要です";
+
+    message.classList.add("success");
+
+  }
+
+
+  document
+    .getElementById("shownCompleted")
+    .textContent =
+    completed + "単位";
+
+
+  document
+    .getElementById("shownRequired")
+    .textContent =
+    required + "単位";
+
+
+  document
+    .getElementById("progressRate")
+    .textContent =
+    progress.toFixed(1) + "%";
+
+
+  document
+    .getElementById("result")
+    .style.display =
+    "block";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+あと何単位落とせる？｜卒業単位計算
+</title>
+
+<meta
+  name="description"
+  content="卒業必要単位、現在の取得単位、今後の履修予定単位から、あと何単位落としても卒業必要単位に届くか計算します。"
+>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header class="site-header">
+
+<div class="header-inner">
+
+<h2 class="site-title">
+<a href="index.html">
+大学生向け計算ツール
+</a>
+</h2>
+
+<nav class="nav">
+<a href="final-exam.html">期末試験</a>
+<a href="attendance.html">出席</a>
+<a href="gpa-target.html">GPA</a>
+<a href="credits-drop.html">落とせる単位</a>
+<a href="credits-graduation.html">卒業単位</a>
+</nav>
+
+</div>
+
+</header>
+
+
+<main class="container">
+
+<section class="card">
+
+<h1>
+あと何単位落とせる？
+</h1>
+
+<p class="description">
+卒業必要単位と今後の履修予定から、
+総単位数上あと何単位落とせるか計算します。
+</p>
+
+</section>
+
+
+<section class="card">
+
+<div class="field">
+
+<label>
+卒業に必要な単位
+</label>
+
+<input
+  id="requiredCredits"
+  type="number"
+  value="124"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+現在取得済みの単位
+</label>
+
+<input
+  id="completedCredits"
+  type="number"
+  value="38"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+今後履修予定の単位
+</label>
+
+<input
+  id="plannedCredits"
+  type="number"
+  value="100"
+>
+
+</div>
+
+
+<button id="calculate">
+計算する
+</button>
+
+<div id="error" class="error"></div>
+
+</section>
+
+
+<section
+  id="result"
+  class="card result"
+>
+
+<h2>計算結果</h2>
+
+<div
+  id="resultMessage"
+  class="result-main"
+></div>
+
+<div class="result-details">
+
+<p>
+卒業まで必要：
+<strong id="remainingNeeded"></strong>
+</p>
+
+<p>
+今後履修予定：
+<strong id="shownPlanned"></strong>
+</p>
+
+</div>
+
+</section>
+
+
+<section class="card">
+
+<h2>注意</h2>
+
+<p class="notice">
+これは総単位数だけを使った簡易計算です。
+実際には必修科目、選択必修、進級条件、
+卒業研究などの条件があります。
+履修要項を必ず確認してください。
+</p>
+
+</section>
+
+
+<section class="card tool-links">
+
+<h2>関連ツール</h2>
+
+<a href="final-exam.html">
+期末試験で何点必要？
+</a>
+
+<a href="attendance.html">
+あと何回授業を休める？
+</a>
+
+<a href="gpa-target.html">
+目標GPAまであとどれくらい？
+</a>
+
+<a href="credits-graduation.html">
+卒業まであと何単位？
+</a>
+
+</section>
+
+</main>
+
+
+<footer>
+大学生向け計算ツール
+</footer>
+
+
+<script>
+
+document
+.getElementById("calculate")
+.addEventListener("click", calculate);
+
+
+function calculate() {
+
+  const required =
+    Number(
+      document.getElementById("requiredCredits").value
+    );
+
+  const completed =
+    Number(
+      document.getElementById("completedCredits").value
+    );
+
+  const planned =
+    Number(
+      document.getElementById("plannedCredits").value
+    );
+
+  const error =
+    document.getElementById("error");
+
+  error.textContent = "";
+
+
+  if (
+    required <= 0 ||
+    completed < 0 ||
+    planned < 0
+  ) {
+
+    error.textContent =
+      "入力内容を確認してください。";
+
+    return;
+  }
+
+
+  const remaining =
+    Math.max(
+      required - completed,
+      0
+    );
+
+  const droppable =
+    planned - remaining;
+
+
+  const message =
+    document.getElementById("resultMessage");
+
+  message.className =
+    "result-main";
+
+
+  if (completed >= required) {
+
+    message.textContent =
+      "必要な総単位数には到達しています";
+
+    message.classList.add("success");
+
+  }
+
+  else if (droppable >= 0) {
+
+    message.textContent =
+      "あと " +
+      droppable +
+      "単位まで落としても総単位数上は到達可能です";
+
+    message.classList.add("success");
+
+  }
+
+  else {
+
+    message.textContent =
+      "現在の履修予定だけでは " +
+      Math.abs(droppable) +
+      "単位不足します";
+
+    message.classList.add("danger");
+
+  }
+
+
+  document
+    .getElementById("remainingNeeded")
+    .textContent =
+    remaining + "単位";
+
+  document
+    .getElementById("shownPlanned")
+    .textContent =
+    planned + "単位";
+
+
+  document
+    .getElementById("result")
+    .style.display =
+    "block";
+}
+
+</script>
+
+</body>
+</html>
