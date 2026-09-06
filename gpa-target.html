@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>目標GPAまであとどれくらい？｜必要GPA逆算ツール</title>
+
+  <meta
+    name="description"
+    content="現在のGPAと取得済み単位、次学期の履修予定単位、目標GPAを入力すると、目標達成に必要な次学期GPAを逆算できます。"
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans JP",
+        sans-serif;
+      background: #f5f7fa;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: min(700px, 92%);
+      margin: 40px auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 28px;
+      line-height: 1.4;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .description {
+      color: #666;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
+
+    .result {
+      display: none;
+    }
+
+    .result-main {
+      font-size: 30px;
+      font-weight: bold;
+      margin: 10px 0 20px;
+    }
+
+    .result-details {
+      background: #f5f7fa;
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .result-details p {
+      margin: 6px 0;
+    }
+
+    .success {
+      color: #15803d;
+    }
+
+    .warning {
+      color: #b45309;
+    }
+
+    .danger {
+      color: #b91c1c;
+    }
+
+    .error {
+      color: #b91c1c;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .notice {
+      color: #777;
+      font-size: 13px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 18px;
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: bold;
+    }
+
+    .tool-links a {
+      display: block;
+      margin: 8px 0;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin-top: 20px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .result-main {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <a class="back-link" href="index.html">
+      ← 期末試験の必要点数計算へ
+    </a>
+
+    <section class="card">
+      <h1>目標GPAまであとどれくらい？</h1>
+
+      <p class="description">
+        現在のGPAと取得済み単位から、
+        目標GPAに到達するために次学期で必要なGPAを逆算します。
+      </p>
+    </section>
+
+    <section class="card">
+
+      <div class="field">
+        <label for="currentGpa">現在のGPA</label>
+        <input
+          id="currentGpa"
+          type="number"
+          value="2.20"
+          min="0"
+          step="0.01"
+        >
+      </div>
+
+      <div class="field">
+        <label for="completedCredits">取得済み単位</label>
+        <input
+          id="completedCredits"
+          type="number"
+          value="30"
+          min="0"
+          step="1"
+        >
+      </div>
+
+      <div class="field">
+        <label for="nextCredits">次学期の履修予定単位</label>
+        <input
+          id="nextCredits"
+          type="number"
+          value="20"
+          min="1"
+          step="1"
+        >
+      </div>
+
+      <div class="field">
+        <label for="targetGpa">目標GPA</label>
+        <input
+          id="targetGpa"
+          type="number"
+          value="2.50"
+          min="0"
+          step="0.01"
+        >
+      </div>
+
+      <div class="field">
+        <label for="gpaMax">GPAの最大値</label>
+        <input
+          id="gpaMax"
+          type="number"
+          value="4.00"
+          min="1"
+          step="0.01"
+        >
+      </div>
+
+      <button id="calculate" type="button">
+        必要なGPAを計算
+      </button>
+
+      <div id="error" class="error"></div>
+
+    </section>
+
+    <section id="result" class="card result">
+
+      <h2>計算結果</h2>
+
+      <div
+        id="resultMessage"
+        class="result-main"
+      ></div>
+
+      <div class="result-details">
+
+        <p>
+          現在のGPA：
+          <strong id="shownCurrentGpa"></strong>
+        </p>
+
+        <p>
+          目標GPA：
+          <strong id="shownTargetGpa"></strong>
+        </p>
+
+        <p>
+          次学期に必要なGPA：
+          <strong id="requiredGpa"></strong>
+        </p>
+
+        <p>
+          次学期終了後の総単位：
+          <strong id="totalCredits"></strong>
+        </p>
+
+      </div>
+
+    </section>
+
+    <section class="card">
+
+      <h2>計算方法</h2>
+
+      <p>
+        現在までの「GPA × 取得済み単位」と、
+        次学期の「必要GPA × 履修予定単位」を合計し、
+        目標GPAに届くよう逆算しています。
+      </p>
+
+      <p class="notice">
+        ※大学によってGPAの算出方法や、GPA計算に含まれる科目が異なる場合があります。
+        正確な制度は所属大学の履修要項を確認してください。
+      </p>
+
+    </section>
+
+    <section class="card tool-links">
+
+      <h2>関連ツール</h2>
+
+      <a href="index.html">
+        期末試験で何点必要？
+      </a>
+
+      <a href="attendance.html">
+        あと何回授業を休める？
+      </a>
+
+    </section>
+
+  </main>
+
+  <footer>
+    大学生向け単位・成績計算ツール
+  </footer>
+
+<script>
+
+document
+  .getElementById("calculate")
+  .addEventListener("click", calculateGpa);
+
+function calculateGpa() {
+
+  const currentGpa =
+    Number(document.getElementById("currentGpa").value);
+
+  const completedCredits =
+    Number(document.getElementById("completedCredits").value);
+
+  const nextCredits =
+    Number(document.getElementById("nextCredits").value);
+
+  const targetGpa =
+    Number(document.getElementById("targetGpa").value);
+
+  const gpaMax =
+    Number(document.getElementById("gpaMax").value);
+
+  const error =
+    document.getElementById("error");
+
+  error.textContent = "";
+
+  if (
+    !Number.isFinite(currentGpa) ||
+    !Number.isFinite(completedCredits) ||
+    !Number.isFinite(nextCredits) ||
+    !Number.isFinite(targetGpa) ||
+    !Number.isFinite(gpaMax) ||
+    completedCredits < 0 ||
+    nextCredits <= 0 ||
+    currentGpa < 0 ||
+    targetGpa < 0 ||
+    gpaMax <= 0
+  ) {
+    error.textContent =
+      "入力内容を正しく確認してください。";
+    return;
+  }
+
+  if (
+    currentGpa > gpaMax ||
+    targetGpa > gpaMax
+  ) {
+    error.textContent =
+      "GPAが最大値を超えています。";
+    return;
+  }
+
+  const currentPoints =
+    currentGpa * completedCredits;
+
+  const totalCredits =
+    completedCredits + nextCredits;
+
+  const targetTotalPoints =
+    targetGpa * totalCredits;
+
+  const neededNextPoints =
+    targetTotalPoints - currentPoints;
+
+  const requiredGpa =
+    neededNextPoints / nextCredits;
+
+  const result =
+    document.getElementById("result");
+
+  const message =
+    document.getElementById("resultMessage");
+
+  message.className = "result-main";
+
+  document
+    .getElementById("shownCurrentGpa")
+    .textContent = currentGpa.toFixed(2);
+
+  document
+    .getElementById("shownTargetGpa")
+    .textContent = targetGpa.toFixed(2);
+
+  document
+    .getElementById("totalCredits")
+    .textContent = `${totalCredits}単位`;
+
+  if (requiredGpa <= 0) {
+
+    message.textContent =
+      "目標GPAはすでに達成圏内です";
+
+    message.classList.add("success");
+
+    document
+      .getElementById("requiredGpa")
+      .textContent = "0.00";
+
+  }
+
+  else if (requiredGpa > gpaMax) {
+
+    message.textContent =
+      "次学期だけでは目標GPAに届きません";
+
+    message.classList.add("danger");
+
+    document
+      .getElementById("requiredGpa")
+      .textContent =
+      requiredGpa.toFixed(2);
+
+  }
+
+  else {
+
+    message.textContent =
+      `次学期にGPA ${requiredGpa.toFixed(2)} が必要です`;
+
+    document
+      .getElementById("requiredGpa")
+      .textContent =
+      requiredGpa.toFixed(2);
+
+    const ratio =
+      requiredGpa / gpaMax;
+
+    if (ratio >= 0.85) {
+      message.classList.add("warning");
+    }
+    else {
+      message.classList.add("success");
+    }
+
+  }
+
+  result.style.display = "block";
+
+  result.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+</script>
+
+</body>
+</html>
