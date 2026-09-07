@@ -1,339 +1,742 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>大学生向け計算ツール｜単位・GPA・出席・期末試験</title>
-
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-T0MYVWRDHL"></script>
-
-<script>
-  window.dataLayer = window.dataLayer || [];
-
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-
-  gtag('js', new Date());
-
-  gtag('config', 'G-T0MYVWRDHL');
-</script>
-
-  <meta
-    name="description"
-    content="大学生向けの無料計算ツール集。期末試験で必要な点数、あと何回授業を休めるか、目標GPA、落とせる単位数、卒業までの残り単位数を簡単に計算できます。"
-  >
-
+  <meta name="description" content="大学生向けの無料計算ツール集。期末試験で必要な点数、欠席可能回数、目標GPA、卒業までの残り単位数などを簡単に計算できます。">
+  <link rel="canonical" href="https://jkgy4luuuuuu.github.io/university-tools/">
   <link rel="stylesheet" href="style.css">
+
+  <!-- Search Consoleの確認metaタグがある場合はここに引き継ぐ -->
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-T0MYVWRDHL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-T0MYVWRDHL');
+  </script>
+
+  <style>
+    /* トップページ専用。ほかのHTMLには影響しません */
+    .home-page {
+      background: #f6f8fc;
+      color: #1f2937;
+      line-height: 1.7;
+    }
+
+    .home-page a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .home-wrap {
+      width: min(1040px, calc(100% - 32px));
+      margin-inline: auto;
+    }
+
+    /* ヘッダー */
+    .home-header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .home-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-block: 15px;
+    }
+
+    .home-brand {
+      color: #1f2937;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.4;
+      min-width: 0;
+    }
+
+    .home-desktop-nav {
+      display: none;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .home-desktop-nav a {
+      color: #4b5563;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .home-desktop-nav a:hover {
+      color: #2563eb;
+    }
+
+    /* スマホ用メニュー */
+    .home-menu {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .home-menu summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 9px 12px;
+      border: 1px solid #dbe2ec;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .home-menu summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .home-menu-icon {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 17px;
+    }
+
+    .home-menu-icon span {
+      display: block;
+      width: 17px;
+      height: 2px;
+      border-radius: 2px;
+      background: #374151;
+    }
+
+    .home-menu-panel {
+      position: absolute;
+      z-index: 10;
+      top: calc(100% + 8px);
+      right: 0;
+      width: min(320px, calc(100vw - 32px));
+      padding: 8px;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+    }
+
+    .home-menu-panel a {
+      display: block;
+      padding: 11px 12px;
+      border-radius: 8px;
+      color: #374151;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .home-menu-panel a:hover,
+    .home-menu-panel a:focus-visible {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .home-menu-divider {
+      height: 1px;
+      margin: 7px 4px;
+      background: #e5e7eb;
+    }
+
+    /* メイン */
+    .home-main {
+      padding-block: 24px 48px;
+    }
+
+    .home-hero {
+      padding: 28px 22px;
+      border: 1px solid #e5eaf2;
+      border-radius: 20px;
+      background: #fff;
+    }
+
+    .home-eyebrow {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .home-hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(25px, 5vw, 38px);
+      line-height: 1.4;
+      letter-spacing: -0.025em;
+    }
+
+    .home-hero p {
+      margin: 0;
+      color: #596579;
+      font-size: 15px;
+    }
+
+    .home-hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .home-primary-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      background: #2563eb;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .home-primary-link:hover {
+      background: #1d4ed8;
+    }
+
+    .home-secondary-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      padding: 10px 4px;
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .home-hero-note {
+      margin-top: 16px !important;
+      font-size: 12px !important;
+      color: #6b7280 !important;
+    }
+
+    /* カテゴリへのショートカット */
+    .home-shortcuts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .home-shortcuts a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 8px 13px;
+      border: 1px solid #dbe2ec;
+      border-radius: 100px;
+      background: #fff;
+      color: #374151;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .home-shortcuts a:hover {
+      border-color: #93c5fd;
+      color: #1d4ed8;
+    }
+
+    /* ツール一覧 */
+    .home-section {
+      margin-top: 38px;
+      scroll-margin-top: 20px;
+    }
+
+    .home-section-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .home-section h2 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .home-section-count {
+      color: #6b7280;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .home-section-intro {
+      margin: -3px 0 18px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .home-tool-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .home-tool-card {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      min-width: 0;
+      padding: 20px;
+      border: 1px solid #e1e6ee;
+      border-radius: 14px;
+      background: #fff;
+      color: inherit;
+      text-decoration: none;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+
+    .home-tool-card:hover {
+      border-color: #93c5fd;
+      transform: translateY(-2px);
+    }
+
+    .home-tool-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .home-tool-label {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .home-tool-arrow {
+      color: #2563eb;
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .home-tool-card h3 {
+      margin: 0;
+      color: #1f2937;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    .home-tool-card p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .home-tool-action {
+      margin-top: auto;
+      padding-top: 7px;
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* サイト説明 */
+    .home-about {
+      margin-top: 40px;
+      padding: 24px 22px;
+      border: 1px solid #e1e6ee;
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .home-about h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+    }
+
+    .home-about p {
+      margin: 0 0 12px;
+      color: #596579;
+      font-size: 14px;
+    }
+
+    .home-about p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* フッター */
+    .home-footer {
+      border-top: 1px solid #e5e7eb;
+      background: #fff;
+      padding: 28px 0;
+    }
+
+    .home-footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .home-footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+    }
+
+    .home-footer a {
+      color: #4b5563;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .home-footer a:hover {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+
+    .home-footer p {
+      margin: 0;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    /* キーボード操作 */
+    .home-page a:focus-visible,
+    .home-page summary:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: 3px;
+    }
+
+    /* タブレット以上 */
+    @media (min-width: 700px) {
+      .home-main {
+        padding-top: 36px;
+      }
+
+      .home-hero {
+        padding: 42px;
+      }
+
+      .home-hero p {
+        max-width: 640px;
+      }
+
+      .home-tool-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .home-tool-card {
+        padding: 24px;
+      }
+
+      .home-tool-card h3 {
+        font-size: 18px;
+      }
+
+      .home-about {
+        padding: 30px;
+      }
+
+      .home-footer-inner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    /* PCではメニューを通常のナビに */
+    @media (min-width: 980px) {
+      .home-desktop-nav {
+        display: flex;
+      }
+
+      .home-menu {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .home-tool-card {
+        transition: none;
+      }
+
+      .home-tool-card:hover {
+        transform: none;
+      }
+    }
+  </style>
 </head>
 
-<body>
+<body class="home-page">
 
-  <header class="site-header">
+<header class="home-header">
+  <div class="home-wrap home-header-inner">
 
-    <div class="header-inner">
+    <a class="home-brand" href="index.html">
+      大学生向け計算ツール
+    </a>
 
-      <h2 class="site-title">
-        <a href="index.html">
-          大学生向け計算ツール
-        </a>
-      </h2>
+    <!-- PC用ナビ -->
+    <nav class="home-desktop-nav" aria-label="メインナビゲーション">
+      <a href="#tools">ツール一覧</a>
+      <a href="#grades">成績・試験</a>
+      <a href="#attendance">出席・遅刻</a>
+      <a href="#credits">単位・履修</a>
+      <a href="about.html">このサイトについて</a>
+    </nav>
 
-      <nav class="nav">
+    <!-- スマホ用折りたたみメニュー -->
+    <details class="home-menu">
+      <summary>
+        <span class="home-menu-icon" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        メニュー
+      </summary>
 
-        <a href="final-exam.html">
-          期末試験
-        </a>
-
-        <a href="attendance.html">
-          出席
-        </a>
-
-        <a href="gpa-target.html">
-          GPA
-        </a>
-
-        <a href="credits-drop.html">
-          落とせる単位
-        </a>
-
-        <a href="credits-graduation.html">
-          卒業単位
-        </a>
-
-        <a href="late-calculator.html">
-          遅刻
-        </a>
-
-        <a href="course-cap.html">
-          履修上限
-        </a>
-
-        <a href="credit-rate.html">
-          単位取得
-        </a>
-
+      <nav class="home-menu-panel" aria-label="スマホ用ナビゲーション">
+        <a href="index.html">トップページ</a>
+        <div class="home-menu-divider"></div>
+        <a href="final-exam.html">期末試験で何点必要？</a>
+        <a href="gpa-target.html">目標GPA逆算</a>
+        <a href="attendance.html">あと何回授業を休める？</a>
+        <a href="late-calculator.html">遅刻はあと何回できる？</a>
+        <a href="credits-graduation.html">卒業まであと何単位？</a>
+        <a href="credits-drop.html">あと何単位落とせる？</a>
+        <a href="course-cap.html">履修上限まであと何単位？</a>
+        <a href="credit-rate.html">単位取得率計算</a>
+        <div class="home-menu-divider"></div>
+        <a href="about.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
       </nav>
+    </details>
 
+  </div>
+</header>
+
+<main class="home-wrap home-main">
+
+  <!-- サイト紹介 -->
+  <section class="home-hero">
+    <span class="home-eyebrow">無料・登録不要</span>
+
+    <h1>
+      大学生活の「あと何点？」を、<br>
+      すぐ計算。
+    </h1>
+
+    <p>
+      期末試験、出席、GPA、卒業単位。
+      大学生がちょっと計算したいことを、数字を入力するだけで確認できる無料ツール集です。
+      スマートフォンからも気軽に使えます。
+    </p>
+
+    <div class="home-hero-actions">
+      <a class="home-primary-link" href="#tools">
+        ツールを探す →
+      </a>
+      <a class="home-secondary-link" href="final-exam.html">
+        期末試験の必要点数を計算
+      </a>
     </div>
 
-  </header>
+    <p class="home-hero-note">
+      現在8つの計算ツールを公開中。基本的な計算はブラウザ上で利用できます。
+    </p>
+  </section>
 
+  <!-- カテゴリショートカット -->
+  <nav class="home-shortcuts" aria-label="カテゴリ">
+    <a href="#grades">成績・試験</a>
+    <a href="#attendance">出席・遅刻</a>
+    <a href="#credits">単位・履修</a>
+  </nav>
 
-  <main class="container">
+  <!-- ツール一覧 -->
+  <div id="tools">
 
-    <!-- サイト紹介 -->
-
-    <section class="card">
-
-      <h1>大学生向け計算ツール</h1>
-
-      <p>
-        大学生活で、
-        「期末試験であと何点必要？」
-        「あと何回授業を休める？」
-        「卒業まであと何単位？」
-        といった疑問を簡単に計算できる無料ツール集です。
-      </p>
-
-      <p class="description">
-        面倒な計算をできるだけ簡単にして、
-        数字を入力するだけですぐ結果を確認できるようにしています。
-      </p>
-
-    </section>
-
-
-    <!-- ツール一覧 -->
-
-    <section class="card">
-
-      <h2>利用できるツール</h2>
-
-      <div class="tool-grid">
-
-
-        <a
-          class="tool-card"
-          href="final-exam.html"
-        >
-
-          <strong>
-            ① 期末試験で何点必要？
-          </strong>
-
-          <span>
-            現在までに獲得した点数から、
-            単位取得に必要な期末試験の点数を計算します。
-          </span>
-
-        </a>
-
-
-        <a
-          class="tool-card"
-          href="attendance.html"
-        >
-
-          <strong>
-            ② あと何回授業を休める？
-          </strong>
-
-          <span>
-            授業の総回数と必要な出席率から、
-            あと何回欠席できるか計算します。
-          </span>
-
-        </a>
-
-
-        <a
-          class="tool-card"
-          href="gpa-target.html"
-        >
-
-          <strong>
-            ③ 目標GPAまであとどれくらい？
-          </strong>
-
-          <span>
-            現在のGPAと取得済み単位から、
-            目標達成に必要な次学期のGPAを逆算します。
-          </span>
-
-        </a>
-
-
-        <a
-          class="tool-card"
-          href="credits-drop.html"
-        >
-
-          <strong>
-            ④ あと何単位落とせる？
-          </strong>
-
-          <span>
-            卒業必要単位と今後の履修予定から、
-            総単位数上あと何単位落とせるか計算します。
-          </span>
-
-        </a>
-
-
-        <a
-          class="tool-card"
-          href="credits-graduation.html"
-        >
-
-          <strong>
-            ⑤ 卒業まであと何単位？
-          </strong>
-
-          <span>
-            現在取得している単位数から、
-            卒業までに必要な残り単位数を計算します。
-          </span>
-
-        </a>
-
-        <a
-          class="tool-card"
-          href="late-calculator.html"
-        >
-
-          <strong>
-            ⑥ 遅刻はあと何回できる？
-          </strong>
-
-          <span>
-            「遅刻3回で欠席1回」などのルールをもとに、
-             出席条件を満たしたままあと何回遅刻できるか計算します
-          </span>
-
-        </a>
-
-        <a
-          class="tool-card"
-          href="course-cap.html"
-        >
-
-          <strong>
-            ⑦ 履修上限まであと何単位？
-          </strong>
-
-          <span>
-            履修上限と現在登録済みの単位から、
-            あと何単位まで授業できるか計算します。
-          </span>
-
-        </a>
-
-        <a 
-          class="tool-card"
-          href="credit-rate.html"
-        >
-
-          <strong>
-            ⑧ 単位取得率計算
-          </strong>
-
-          <span>
-            履修した単位のうち何％を取得できたかと、
-            未取得単位数を計算します。
-          </span>
-
-        </a>
-        
-
-
+    <!-- 成績・試験 -->
+    <section id="grades" class="home-section">
+      <div class="home-section-heading">
+        <h2>成績・試験</h2>
+        <span class="home-section-count">2ツール</span>
       </div>
 
+      <p class="home-section-intro">
+        単位取得に必要な点数や、目標GPAまでの成績を逆算できます。
+      </p>
+
+      <div class="home-tool-grid">
+
+        <a class="home-tool-card" href="final-exam.html">
+          <div class="home-tool-top">
+            <span class="home-tool-label">試験・成績</span>
+            <span class="home-tool-arrow" aria-hidden="true">↗</span>
+          </div>
+          <h3>期末試験で何点必要？</h3>
+          <p>現在までの得点から、単位取得に必要な期末試験の点数と得点率を計算します。</p>
+          <span class="home-tool-action">計算する →</span>
+        </a>
+
+        <a class="home-tool-card" href="gpa-target.html">
+          <div class="home-tool-top">
+            <span class="home-tool-label">GPA</span>
+            <span class="home-tool-arrow" aria-hidden="true">↗</span>
+          </div>
+          <h3>目標GPAまであとどれくらい？</h3>
+          <p>現在のGPAと計算対象単位数から、目標達成に必要な次学期のGPAを逆算します。</p>
+          <span class="home-tool-action">計算する →</span>
+        </a>
+
+      </div>
     </section>
 
+    <!-- 出席・遅刻 -->
+    <section id="attendance" class="home-section">
+      <div class="home-section-heading">
+        <h2>出席・遅刻</h2>
+        <span class="home-section-count">2ツール</span>
+      </div>
 
-    <!-- サイトについて -->
-
-    <section class="card">
-
-      <h2>このサイトについて</h2>
-
-      <p>
-        このサイトは、
-        大学生が授業・単位・GPA・出席などに関する
-        簡単な計算をすぐに行えるようにすることを目的とした
-        計算ツールサイトです。
+      <p class="home-section-intro">
+        授業の出席条件をもとに、残りの欠席・遅刻可能回数を確認できます。
       </p>
 
-      <p>
-        各ツールはブラウザ上で利用でき、
-        基本的な計算では登録やログインは必要ありません。
-      </p>
+      <div class="home-tool-grid">
 
+        <a class="home-tool-card" href="attendance.html">
+          <div class="home-tool-top">
+            <span class="home-tool-label">出席</span>
+            <span class="home-tool-arrow" aria-hidden="true">↗</span>
+          </div>
+          <h3>あと何回授業を休める？</h3>
+          <p>授業回数と必要出席率から、残りの欠席可能回数や現在の出席率を計算します。</p>
+          <span class="home-tool-action">計算する →</span>
+        </a>
+
+        <a class="home-tool-card" href="late-calculator.html">
+          <div class="home-tool-top">
+            <span class="home-tool-label">遅刻</span>
+            <span class="home-tool-arrow" aria-hidden="true">↗</span>
+          </div>
+          <h3>遅刻はあと何回できる？</h3>
+          <p>「遅刻3回で欠席1回」などのルールをもとに、あと何回遅刻できるか計算します。</p>
+          <span class="home-tool-action">計算する →</span>
+        </a>
+
+      </div>
     </section>
 
+    <!-- 単位・履修 -->
+    <section id="credits" class="home-section">
+      <div class="home-section-heading">
+        <h2>単位・履修</h2>
+        <span class="home-section-count">4ツール</span>
+      </div>
 
-    <!-- 注意事項 -->
-
-    <section class="card">
-
-      <h2>利用時の注意</h2>
-
-      <p class="notice">
-        このサイトで表示される結果は簡易計算による目安です。
-        大学・学部・授業によって、
-        GPAの算出方法、出席条件、必修科目、
-        卒業要件などは異なります。
+      <p class="home-section-intro">
+        卒業までの残り単位、履修上限、単位取得率などをまとめて確認できます。
       </p>
 
-      <p class="notice">
-        履修や卒業に関する最終的な判断をする場合は、
-        必ず所属大学の履修要項・学生便覧・シラバスなどを確認してください。
-      </p>
+      <div class="home-tool-grid">
 
+        <a class="home-tool-card" href="credits-graduation.html">
+          <div class="home-tool-top">
+            <span class="home-tool-label">卒業単位</span>
+            <span class="home-tool-arrow" aria-hidden="true">↗</span>
+          </div>
+          <h3>卒業まであと何単位？</h3>
+          <p>卒業必要単位と現在取得済みの単位から、残り単位数と進捗率を計算します。</p>
+          <span class="home-tool-action">計算する →</span>
+        </a>
+
+        <a class="home-tool-card" href="credits-drop.html">
+          <div class="home-tool-top">
+            <span class="home-tool-label">履修計画</span>
+            <span class="home-tool-arrow" aria-hidden="true">↗</span>
+          </div>
+          <h3>あと何単位落とせる？</h3>
+          <p>卒業必要単位と今後の履修予定から、総単位数上の余裕を計算します。</p>
+          <span class="home-tool-action">計算する →</span>
+        </a>
+
+        <a class="home-tool-card" href="course-cap.html">
+          <div class="home-tool-top">
+            <span class="home-tool-label">CAP制・履修上限</span>
+            <span class="home-tool-arrow" aria-hidden="true">↗</span>
+          </div>
+          <h3>履修上限まであと何単位？</h3>
+          <p>履修上限と現在の登録単位から、あと何単位まで授業を追加できるか計算します。</p>
+          <span class="home-tool-action">計算する →</span>
+        </a>
+
+        <a class="home-tool-card" href="credit-rate.html">
+          <div class="home-tool-top">
+            <span class="home-tool-label">単位取得率</span>
+            <span class="home-tool-arrow" aria-hidden="true">↗</span>
+          </div>
+          <h3>単位取得率を計算</h3>
+          <p>履修した単位のうち何％を取得できたかと、未取得単位数を計算します。</p>
+          <span class="home-tool-action">計算する →</span>
+        </a>
+
+      </div>
     </section>
 
-  </main>
+  </div>
 
-<footer>
+  <!-- サイトについて -->
+  <section class="home-about">
+    <h2>このサイトについて</h2>
+    <p>
+      大学生向け計算ツールは、授業・成績・単位などに関する計算を、
+      できるだけ手軽に行えるようにすることを目的とした個人運営のサイトです。
+    </p>
+    <p>
+      計算結果は簡易的な目安です。大学・学部・授業によってGPAの算出方法、
+      出席条件、必修科目、卒業要件などは異なります。
+      最終的な判断は、所属大学の履修要項・学生便覧・シラバスなどをご確認ください。
+    </p>
+    <p>
+      不具合や新しいツールの要望は、<a href="contact.html">お問い合わせページ</a>から送ることができます。
+    </p>
+  </section>
 
-  <p>
-    <a href="index.html">
-      トップページ
-    </a>
+</main>
 
-    |
+<footer class="home-footer">
+  <div class="home-wrap home-footer-inner">
 
-    <a href="about.html">
-      運営者情報
-    </a>
+    <div class="home-footer-links">
+      <a href="index.html">トップページ</a>
+      <a href="about.html">運営者情報</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </div>
 
-    |
+    <p>© 2026 大学生向け計算ツール</p>
 
-    <a href="privacy.html">
-      プライバシーポリシー
-    </a>
-
-    |
-
-    <a href="contact.html">
-      お問い合わせ
-    </a>
-  </p>
-
-  <p>
-    大学生向け計算ツール
-  </p>
-
+  </div>
 </footer>
-
 
 </body>
 </html>
