@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    履修上限まであと何単位？｜大学のCAP制・履修単位計算
+  </title>
+
+  <meta
+    name="description"
+    content="大学の履修上限（CAP制）と現在の履修登録単位を入力すると、あと何単位履修できるか簡単に計算できます。"
+  >
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-T0MYVWRDHL"></script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-T0MYVWRDHL');
+  </script>
+</head>
+
+
+<body>
+
+<header class="site-header">
+
+  <div class="header-inner">
+
+    <h2 class="site-title">
+      <a href="index.html">
+        大学生向け計算ツール
+      </a>
+    </h2>
+
+    <nav class="nav">
+      <a href="final-exam.html">期末試験</a>
+      <a href="attendance.html">出席</a>
+      <a href="gpa-target.html">GPA</a>
+      <a href="credits-drop.html">落とせる単位</a>
+      <a href="credits-graduation.html">卒業単位</a>
+      <a href="late-calculator.html">遅刻</a>
+      <a href="course-cap.html">履修上限</a>
+      <a href="credit-rate.html">単位取得率</a>
+    </nav>
+
+  </div>
+
+</header>
+
+
+<main class="container">
+
+  <section class="card">
+
+    <h1>履修上限まであと何単位？</h1>
+
+    <p class="description">
+      大学の履修上限と現在登録している単位数から、
+      あと何単位まで履修できるか計算します。
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <div class="field">
+
+      <label for="capCredits">
+        履修上限単位
+      </label>
+
+      <input
+        id="capCredits"
+        type="number"
+        value="48"
+        min="1"
+        step="1"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="registeredCredits">
+        現在の履修登録単位
+      </label>
+
+      <input
+        id="registeredCredits"
+        type="number"
+        value="32"
+        min="0"
+        step="1"
+      >
+
+    </div>
+
+
+    <button id="calculate" type="button">
+      あと何単位履修できるか計算
+    </button>
+
+    <div id="error" class="error"></div>
+
+  </section>
+
+
+  <section
+    id="result"
+    class="card result"
+  >
+
+    <h2>計算結果</h2>
+
+    <div
+      id="resultMessage"
+      class="result-main"
+    ></div>
+
+    <div class="result-details">
+
+      <p>
+        履修上限：
+        <strong id="shownCap"></strong>
+      </p>
+
+      <p>
+        現在登録済み：
+        <strong id="shownRegistered"></strong>
+      </p>
+
+      <p>
+        履修上限の使用率：
+        <strong id="capRate"></strong>
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>こんなときに使えます</h2>
+
+    <p>
+      「今年は48単位まで履修できるけど、
+      今の時間割で何単位使っていて、
+      あと何単位追加できるのか知りたい」
+      というときに使えます。
+    </p>
+
+    <p>
+      履修登録期間中に、
+      追加で授業を入れられるか確認するときにも便利です。
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>計算例</h2>
+
+    <ul>
+      <li>履修上限：48単位</li>
+      <li>現在登録済み：32単位</li>
+    </ul>
+
+    <p>
+      この場合、
+    </p>
+
+    <p>
+      <strong>
+        48 − 32 = 16
+      </strong>
+    </p>
+
+    <p>
+      なので、
+      あと16単位まで履修できます。
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>計算方法</h2>
+
+    <p>
+      計算方法はシンプルです。
+    </p>
+
+    <p>
+      <strong>
+        履修上限 − 現在の履修単位
+        ＝ あと履修できる単位
+      </strong>
+    </p>
+
+    <p>
+      また、現在どれくらい履修上限を使っているかも
+      パーセントで表示します。
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>よくある質問</h2>
+
+    <h3>CAP制とは何ですか？</h3>
+
+    <p>
+      大学が1年間や1学期に履修できる単位数の上限を
+      設ける制度のことです。
+    </p>
+
+    <h3>すべての大学で上限は同じですか？</h3>
+
+    <p>
+      いいえ。
+      大学・学部・学年などによって異なります。
+    </p>
+
+    <h3>集中講義も履修上限に含まれますか？</h3>
+
+    <p>
+      大学の制度によって扱いが異なります。
+      履修要項を確認してください。
+    </p>
+
+    <h3>履修上限を超えた数字を入力するとどうなりますか？</h3>
+
+    <p>
+      「履修上限を超えています」と表示します。
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>注意</h2>
+
+    <p class="notice">
+      CAP制や履修上限の扱いは大学・学部・学年によって異なります。
+      成績優秀者の上限緩和、集中講義の除外など、
+      独自の制度が設けられている場合があります。
+    </p>
+
+    <p class="notice">
+      正確な履修上限は所属大学の履修要項を確認してください。
+    </p>
+
+  </section>
+
+
+  <section class="card tool-links">
+
+    <h2>関連ツール</h2>
+
+    <a href="final-exam.html">
+      期末試験で何点必要？
+    </a>
+
+    <a href="attendance.html">
+      あと何回授業を休める？
+    </a>
+
+    <a href="gpa-target.html">
+      目標GPAまであとどれくらい？
+    </a>
+
+    <a href="credits-drop.html">
+      あと何単位落とせる？
+    </a>
+
+    <a href="credits-graduation.html">
+      卒業まであと何単位？
+    </a>
+
+    <a href="late-calculator.html">
+      遅刻はあと何回できる？
+    </a>
+
+    <a href="credit-rate.html">
+      単位取得率を計算
+    </a>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  <p>
+    <a href="index.html">トップページ</a>
+    |
+    <a href="about.html">運営者情報</a>
+    |
+    <a href="privacy.html">プライバシーポリシー</a>
+    |
+    <a href="contact.html">お問い合わせ</a>
+  </p>
+
+  <p>
+    大学生向け計算ツール
+  </p>
+
+</footer>
+
+
+<script>
+
+document
+  .getElementById("calculate")
+  .addEventListener(
+    "click",
+    calculateCap
+  );
+
+
+function calculateCap() {
+
+  const cap =
+    Number(
+      document
+        .getElementById("capCredits")
+        .value
+    );
+
+  const registered =
+    Number(
+      document
+        .getElementById("registeredCredits")
+        .value
+    );
+
+  const error =
+    document.getElementById("error");
+
+  error.textContent = "";
+
+
+  if (
+    !Number.isFinite(cap) ||
+    !Number.isFinite(registered) ||
+    cap <= 0 ||
+    registered < 0
+  ) {
+
+    error.textContent =
+      "入力内容を正しく確認してください。";
+
+    return;
+  }
+
+
+  const remaining =
+    cap - registered;
+
+  const rate =
+    registered / cap * 100;
+
+
+  const message =
+    document.getElementById("resultMessage");
+
+  message.className =
+    "result-main";
+
+
+  if (remaining > 0) {
+
+    message.textContent =
+      `あと ${remaining}単位 履修できます`;
+
+    message.classList.add("success");
+
+  }
+
+  else if (remaining === 0) {
+
+    message.textContent =
+      "履修上限に到達しています";
+
+    message.classList.add("warning");
+
+  }
+
+  else {
+
+    message.textContent =
+      `${Math.abs(remaining)}単位 上限を超えています`;
+
+    message.classList.add("danger");
+
+  }
+
+
+  document
+    .getElementById("shownCap")
+    .textContent =
+    cap + "単位";
+
+
+  document
+    .getElementById("shownRegistered")
+    .textContent =
+    registered + "単位";
+
+
+  document
+    .getElementById("capRate")
+    .textContent =
+    rate.toFixed(1) + "%";
+
+
+  document
+    .getElementById("result")
+    .style.display =
+    "block";
+}
+
+</script>
+
+</body>
+</html>
