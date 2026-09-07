@@ -1,646 +1,261 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>
-    遅刻はあと何回できる？｜大学の出席・遅刻計算
-  </title>
-
-  <meta
-    name="description"
-    content="授業回数、必要出席率、欠席回数、遅刻回数、遅刻何回で欠席1回扱いになるかを入力すると、あと何回遅刻できるか計算できます。"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>遅刻はあと何回できる？｜大学の出席・遅刻計算ツール</title>
+  <meta name="description" content="遅刻3回で欠席1回などの授業ルールに対応。現在の欠席・遅刻回数と残り授業回数から、あと何回遅刻できるか計算します。">
   <link rel="stylesheet" href="style.css">
-
-  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-T0MYVWRDHL"></script>
-
   <script>
     window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-
+    function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-T0MYVWRDHL');
   </script>
 </head>
-
-
 <body>
-
 <header class="site-header">
-
   <div class="header-inner">
-
-    <h2 class="site-title">
-      <a href="index.html">
-        大学生向け計算ツール
-      </a>
-    </h2>
-
-    <nav class="nav">
-
-     <a href="final-exam.html">期末試験</a>
-
-     <a href="attendance.html">出席</a>
-
-     <a href="gpa-target.html">GPA</a>
-
-     <a href="credits-drop.html">落とせる単位</a>
-
-     <a href="credits-graduation.html">卒業単位</a>
-
-     <a href="late-calculator.html">遅刻</a>
-
-     <a href="course-cap.html">履修上限</a>
-
-     <a href="credit-rate.html">単位取得率</a>
-
+    <h2 class="site-title"><a href="index.html">大学生向け計算ツール</a></h2>
+    <nav class="nav" aria-label="ツール一覧">
+      <a href="final-exam.html">期末試験</a>
+      <a href="attendance.html">出席</a>
+      <a href="gpa-target.html">GPA</a>
+      <a href="credits-drop.html">落とせる単位</a>
+      <a href="credits-graduation.html">卒業単位</a>
+      <a href="late-calculator.html" aria-current="page">遅刻</a>
+      <a href="course-cap.html">履修上限</a>
+      <a href="credit-rate.html">単位取得率</a>
     </nav>
-
-
   </div>
-
 </header>
 
-
 <main class="container">
-
   <section class="card">
-
     <h1>遅刻はあと何回できる？</h1>
-
-    <p class="description">
-      「遅刻3回で欠席1回扱い」などの授業ルールをもとに、
-      あと何回遅刻できるか計算します。
-    </p>
-
+    <p class="description">「遅刻3回で欠席1回扱い」などのルールをもとに、出席条件を満たす範囲であと何回遅刻できるか計算します。</p>
   </section>
-
 
   <section class="card">
-
-    <div class="field">
-      <label for="totalClasses">
-        授業の総回数
-      </label>
-
-      <input
-        id="totalClasses"
-        type="number"
-        value="15"
-        min="1"
-        step="1"
-      >
-    </div>
-
-
-    <div class="field">
-      <label for="requiredAttendance">
-        必要な出席率（%）
-      </label>
-
-      <input
-        id="requiredAttendance"
-        type="number"
-        value="80"
-        min="0"
-        max="100"
-        step="0.1"
-      >
-    </div>
-
-
-    <div class="field">
-      <label for="currentAbsences">
-        現在の欠席回数
-      </label>
-
-      <input
-        id="currentAbsences"
-        type="number"
-        value="1"
-        min="0"
-        step="1"
-      >
-    </div>
-
-
-    <div class="field">
-      <label for="currentLate">
-        現在の遅刻回数
-      </label>
-
-      <input
-        id="currentLate"
-        type="number"
-        value="2"
-        min="0"
-        step="1"
-      >
-    </div>
-
-
-    <div class="field">
-      <label for="latePerAbsence">
-        遅刻何回で欠席1回扱い？
-      </label>
-
-      <input
-        id="latePerAbsence"
-        type="number"
-        value="3"
-        min="1"
-        step="1"
-      >
-    </div>
-
-
-    <button id="calculate" type="button">
-      あと何回遅刻できるか計算
-    </button>
-
-    <div id="error" class="error"></div>
-
+    <h2>遅刻・欠席の条件</h2>
+    <form id="calculator" novalidate>
+      <div class="field">
+        <label for="totalClasses">授業の総回数</label>
+        <input id="totalClasses" type="number" value="15" min="1" step="1" required>
+      </div>
+      <div class="field">
+        <label for="heldClasses">現在までに実施された授業回数</label>
+        <input id="heldClasses" type="number" value="5" min="0" step="1" required>
+      </div>
+      <div class="field">
+        <label for="currentAbsences">現在の欠席回数</label>
+        <input id="currentAbsences" type="number" value="1" min="0" step="1" required>
+      </div>
+      <div class="field">
+        <label for="currentLate">現在の遅刻回数</label>
+        <input id="currentLate" type="number" value="2" min="0" step="1" required>
+      </div>
+      <div class="field">
+        <label for="latePerAbsence">遅刻何回で欠席1回扱い？</label>
+        <input id="latePerAbsence" type="number" value="3" min="1" step="1" required>
+      </div>
+      <div class="field">
+        <label for="ruleType">出席条件の指定方法</label>
+        <select id="ruleType" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+          <option value="fraction">出席割合（分数）</option>
+          <option value="percent">出席率（%）</option>
+          <option value="absence">欠席上限（回）</option>
+        </select>
+      </div>
+      <div id="fractionFields">
+        <div class="field">
+          <label for="numerator">必要出席割合の分子</label>
+          <input id="numerator" type="number" value="2" min="0" step="1">
+        </div>
+        <div class="field">
+          <label for="denominator">必要出席割合の分母</label>
+          <input id="denominator" type="number" value="3" min="1" step="1">
+        </div>
+      </div>
+      <div id="percentFields" style="display:none;">
+        <div class="field">
+          <label for="requiredPercent">必要出席率（%）</label>
+          <input id="requiredPercent" type="number" value="80" min="0" max="100" step="0.1">
+        </div>
+      </div>
+      <div id="absenceFields" style="display:none;">
+        <div class="field">
+          <label for="absenceLimit">欠席可能な上限回数</label>
+          <input id="absenceLimit" type="number" value="3" min="0" step="1">
+        </div>
+      </div>
+      <button type="submit">あと何回遅刻できるか計算</button>
+      <p id="error" class="error" role="alert"></p>
+    </form>
   </section>
 
-
-  <section
-    id="result"
-    class="card result"
-  >
-
+  <section id="result" class="card result" aria-live="polite">
     <h2>計算結果</h2>
-
-    <div
-      id="resultMessage"
-      class="result-main"
-    ></div>
-
+    <div id="resultMessage" class="result-main"></div>
     <div class="result-details">
-
-      <p>
-        最大欠席可能回数：
-        <strong id="maxAbsences"></strong>
-      </p>
-
-      <p>
-        現在の欠席：
-        <strong id="shownAbsences"></strong>
-      </p>
-
-      <p>
-        現在の遅刻：
-        <strong id="shownLate"></strong>
-      </p>
-
-      <p>
-        遅刻換算後の欠席：
-        <strong id="convertedAbsences"></strong>
-      </p>
-
-      <p>
-        あと遅刻できる回数：
-        <strong id="remainingLate"></strong>
-      </p>
-
-      <p>
-        あと欠席できる回数：
-        <strong id="remainingAbsences"></strong>
-      </p>
-
+      <p>最大欠席可能回数：<strong id="maxAbsences"></strong></p>
+      <p>現在の換算後欠席回数：<strong id="effectiveAbsences"></strong></p>
+      <p>現在の遅刻の端数：<strong id="lateRemainder"></strong></p>
+      <p>残り授業回数：<strong id="futureClasses"></strong></p>
+      <p>あと欠席できる回数：<strong id="remainingAbsences"></strong></p>
+      <p>今後すべて出席した場合の最終出席率：<strong id="bestRate"></strong></p>
     </div>
-
+    <p id="resultNote" class="notice"></p>
   </section>
 
-
   <section class="card">
-
     <h2>こんなときに使えます</h2>
-
-    <p>
-      「遅刻3回で欠席1回になるけど、
-      今あと何回遅刻しても大丈夫なのか分からない」
-      というときに使えます。
-    </p>
-
-    <p>
-      現在の欠席回数と遅刻回数を合わせて、
-      出席条件を下回らない範囲を計算します。
-    </p>
-
+    <p>「遅刻3回で欠席1回になる授業で、すでに2回遅刻している。あと何回遅刻できる？」というときに使えます。欠席と遅刻をまとめて計算し、残り授業の回数も考慮します。</p>
   </section>
 
-
   <section class="card">
-
     <h2>計算例</h2>
-
-    <ul>
-      <li>授業回数：15回</li>
-      <li>必要出席率：80%</li>
-      <li>現在の欠席：1回</li>
-      <li>現在の遅刻：2回</li>
-      <li>遅刻3回で欠席1回扱い</li>
-    </ul>
-
-    <p>
-      15回の授業で80%以上出席が必要なら、
-      必要な出席回数は12回です。
-    </p>
-
-    <p>
-      つまり欠席できるのは最大3回です。
-    </p>
-
-    <p>
-      現在1回欠席しているため、
-      欠席換算上はあと2回分の余裕があります。
-    </p>
-
+    <p>全15回、80%以上出席、現在欠席1回・遅刻2回、遅刻3回で欠席1回扱いの場合を考えます。</p>
+    <p>最大欠席は3回なので、現在の欠席を除くと2回分の余裕があります。現在の遅刻2回に加えて、さらに6回遅刻すると合計8回となり、換算後の欠席は2回です。元の欠席1回と合わせて3回になります。</p>
+    <p>したがって、残り授業が十分にある場合、あと6回遅刻できる計算です。ただし、実際の残り授業回数が6回未満なら、その回数が上限になります。</p>
   </section>
 
-
   <section class="card">
-
     <h2>計算方法</h2>
-
-    <p>
-      まず必要な出席回数を計算します。
-    </p>
-
-    <p>
-      <strong>
-        授業回数 × 必要出席率
-        ＝ 必要出席回数
-      </strong>
-    </p>
-
-    <p>
-      次に、遅刻回数を
-      「遅刻○回で欠席1回」というルールに従って換算します。
-    </p>
-
-    <p>
-      そのうえで、
-      最大欠席可能回数との差から、
-      あと何回遅刻・欠席できるかを計算します。
-    </p>
-
+    <p>遅刻を指定回数ごとに欠席へ換算します。</p>
+    <p><strong>換算後欠席 = 通常の欠席 ＋ floor（遅刻回数 ÷ 換算回数）</strong></p>
+    <p>残りの欠席枠から、追加で遅刻できる回数を計算します。遅刻の端数は次の欠席換算へ持ち越す方式です。</p>
   </section>
 
-
   <section class="card">
-
     <h2>よくある質問</h2>
-
     <h3>遅刻2回で欠席1回の授業でも使えますか？</h3>
-
-    <p>
-      使えます。
-      「遅刻何回で欠席1回扱い？」の欄に2と入力してください。
-    </p>
-
-    <h3>遅刻を切り上げて欠席扱いにしますか？</h3>
-
-    <p>
-      いいえ。
-      例えば「遅刻3回で欠席1回」の場合、
-      遅刻2回までは欠席1回には換算しません。
-    </p>
-
-    <h3>公欠や早退にも対応していますか？</h3>
-
-    <p>
-      現在は通常の欠席と遅刻のみを対象としています。
-      公欠・早退の扱いは大学や授業によって異なります。
-    </p>
-
+    <p>使えます。換算回数に2を入力してください。</p>
+    <h3>遅刻を毎回切り上げて欠席扱いにしますか？</h3>
+    <p>いいえ。遅刻3回で欠席1回の場合、遅刻2回はまだ欠席1回に換算しません。ただし、大学が端数も欠席扱いにする場合には、このツールの方式とは異なります。</p>
+    <h3>遅刻と欠席を同じ授業で重複して数えますか？</h3>
+    <p>いいえ。通常の欠席と遅刻は別々の授業で発生したものとして入力してください。</p>
   </section>
-
 
   <section class="card">
-
-    <h2>注意</h2>
-
-    <p class="notice">
-      遅刻・欠席の扱いは大学や授業によって異なります。
-      「遅刻3回で欠席1回」
-      「30分以上の遅刻は欠席扱い」
-      など独自ルールがある場合があります。
-    </p>
-
-    <p class="notice">
-      実際の履修条件は必ずシラバスや担当教員の説明を確認してください。
-    </p>
-
+    <h2>利用時の注意</h2>
+    <p class="notice">遅刻の換算方法、遅刻時間による欠席扱い、公欠、早退、必須授業などの条件は大学や授業によって異なります。このツールは入力された換算ルールだけを使った簡易計算です。実際の履修条件はシラバスを確認してください。</p>
   </section>
-
 
   <section class="card tool-links">
-
     <h2>関連ツール</h2>
-
-    <a href="final-exam.html">
-      期末試験で何点必要？
-    </a>
-
-    <a href="attendance.html">
-      あと何回授業を休める？
-    </a>
-
-    <a href="gpa-target.html">
-      目標GPAまであとどれくらい？
-    </a>
-
-    <a href="credits-drop.html">
-      あと何単位落とせる？
-    </a>
-
-    <a href="credits-graduation.html">
-      卒業まであと何単位？
-    </a>
-
-    <a href="course-cap.html">
-      履修上限まであと何単位？
-    </a>
-
-    <a href="credit-rate.html">
-      単位取得率を計算
-    </a>
-
+    <a href="final-exam.html">期末試験で何点必要？</a>
+    <a href="attendance.html">あと何回授業を休める？</a>
+    <a href="gpa-target.html">目標GPAまであとどれくらい？</a>
+    <a href="credits-drop.html">あと何単位落とせる？</a>
+    <a href="credits-graduation.html">卒業まであと何単位？</a>
+    <a href="course-cap.html">履修上限まであと何単位？</a>
+    <a href="credit-rate.html">単位取得率を計算</a>
   </section>
-
 </main>
 
-
 <footer>
-
-  <p>
-    <a href="index.html">
-      トップページ
-    </a>
-
-    |
-
-    <a href="about.html">
-      運営者情報
-    </a>
-
-    |
-
-    <a href="privacy.html">
-      プライバシーポリシー
-    </a>
-
-    |
-
-    <a href="contact.html">
-      お問い合わせ
-    </a>
-  </p>
-
-  <p>
-    大学生向け計算ツール
-  </p>
-
+  <p><a href="index.html">トップページ</a> | <a href="about.html">運営者情報</a> | <a href="privacy.html">プライバシーポリシー</a> | <a href="contact.html">お問い合わせ</a></p>
+  <p>大学生向け計算ツール</p>
 </footer>
 
-
 <script>
+  const form = document.getElementById("calculator");
+  const error = document.getElementById("error");
+  const result = document.getElementById("result");
+  const ruleType = document.getElementById("ruleType");
 
-document
-  .getElementById("calculate")
-  .addEventListener(
-    "click",
-    calculateLate
-  );
+  ruleType.addEventListener("change", function() {
+    document.getElementById("fractionFields").style.display = this.value === "fraction" ? "block" : "none";
+    document.getElementById("percentFields").style.display = this.value === "percent" ? "block" : "none";
+    document.getElementById("absenceFields").style.display = this.value === "absence" ? "block" : "none";
+  });
 
-
-function calculateLate() {
-
-  const totalClasses =
-    Number(
-      document.getElementById("totalClasses").value
-    );
-
-  const requiredAttendance =
-    Number(
-      document.getElementById("requiredAttendance").value
-    );
-
-  const currentAbsences =
-    Number(
-      document.getElementById("currentAbsences").value
-    );
-
-  const currentLate =
-    Number(
-      document.getElementById("currentLate").value
-    );
-
-  const latePerAbsence =
-    Number(
-      document.getElementById("latePerAbsence").value
-    );
-
-  const error =
-    document.getElementById("error");
-
-  error.textContent = "";
-
-
-  if (
-    !Number.isFinite(totalClasses) ||
-    !Number.isFinite(requiredAttendance) ||
-    !Number.isFinite(currentAbsences) ||
-    !Number.isFinite(currentLate) ||
-    !Number.isFinite(latePerAbsence) ||
-    totalClasses <= 0 ||
-    requiredAttendance < 0 ||
-    requiredAttendance > 100 ||
-    currentAbsences < 0 ||
-    currentLate < 0 ||
-    latePerAbsence <= 0
-  ) {
-
-    error.textContent =
-      "入力内容を正しく確認してください。";
-
-    return;
+  function readNumber(id, label, min, max = Infinity, integer = false) {
+    const input = document.getElementById(id);
+    if (input.value.trim() === "") throw new Error(label + "を入力してください。");
+    const value = Number(input.value);
+    if (!Number.isFinite(value) || value < min || value > max || (integer && !Number.isInteger(value))) {
+      throw new Error(label + "を正しく入力してください。");
+    }
+    return value;
   }
 
+  form.addEventListener("submit", function(event) {
+    event.preventDefault();
+    error.textContent = "";
+    result.style.display = "none";
 
-  if (currentAbsences > totalClasses) {
+    try {
+      const total = readNumber("totalClasses", "授業の総回数", 1, Infinity, true);
+      const held = readNumber("heldClasses", "実施済み授業回数", 0, total, true);
+      const absences = readNumber("currentAbsences", "現在の欠席回数", 0, held, true);
+      const late = readNumber("currentLate", "現在の遅刻回数", 0, held, true);
+      const per = readNumber("latePerAbsence", "遅刻の換算回数", 1, Infinity, true);
 
-    error.textContent =
-      "欠席回数が授業回数を超えています。";
+      if (absences + late > held) {
+        throw new Error("欠席回数と遅刻回数の合計が、実施済み授業回数を超えています。");
+      }
 
-    return;
-  }
+      let maxAbsences;
+      if (ruleType.value === "fraction") {
+        const numerator = readNumber("numerator", "分子", 0, Infinity, true);
+        const denominator = readNumber("denominator", "分母", 1, Infinity, true);
+        if (numerator > denominator) throw new Error("分子は分母以下にしてください。");
+        maxAbsences = total - Math.ceil(total * numerator / denominator - 1e-10);
+      } else if (ruleType.value === "percent") {
+        const rate = readNumber("requiredPercent", "必要出席率", 0, 100);
+        maxAbsences = total - Math.ceil(total * rate / 100 - 1e-10);
+      } else {
+        maxAbsences = readNumber("absenceLimit", "欠席上限", 0, total, true);
+      }
 
+      const converted = Math.floor(late / per);
+      const effective = absences + converted;
+      const remainder = late % per;
+      const remainingSlots = maxAbsences - effective;
+      const future = total - held;
+      const rawLate = remainingSlots < 0 ? 0 : (remainingSlots + 1) * per - 1 - remainder;
+      const possibleLate = Math.min(Math.max(0, rawLate), future);
+      const possibleAbsences = Math.min(Math.max(0, remainingSlots), future);
+      const bestRate = (total - effective) / total * 100;
 
-  const requiredAttendanceCount =
-    Math.ceil(
-      totalClasses *
-      requiredAttendance /
-      100
-    );
+      const message = document.getElementById("resultMessage");
+      const note = document.getElementById("resultNote");
+      message.className = "result-main";
 
+      document.getElementById("maxAbsences").textContent = maxAbsences + "回";
+      document.getElementById("effectiveAbsences").textContent = effective + "回";
+      document.getElementById("lateRemainder").textContent = remainder + "回";
+      document.getElementById("futureClasses").textContent = future + "回";
+      document.getElementById("remainingAbsences").textContent = possibleAbsences + "回";
+      document.getElementById("bestRate").textContent = bestRate.toFixed(1) + "%";
 
-  const maxAbsences =
-    totalClasses -
-    requiredAttendanceCount;
+      if (remainingSlots < 0) {
+        message.textContent = "すでに出席条件を下回っています";
+        message.classList.add("danger");
+        note.textContent = "今後すべて出席しても、入力された条件には届かない計算です。";
+      } else if (future === 0) {
+        message.textContent = "授業はすべて終了しています";
+        message.classList.add("warning");
+        note.textContent = "今後遅刻できる回数は0回です。";
+      } else if (possibleLate === 0) {
+        message.textContent = "これ以上遅刻できません";
+        message.classList.add("warning");
+        note.textContent = "次の遅刻で欠席換算が増える可能性があります。";
+      } else {
+        message.textContent = "あと " + possibleLate + "回 遅刻できます";
+        message.classList.add("success");
+        note.textContent = "今後の欠席を増やさず、残り授業で1回につき最大1回遅刻する前提です。";
+      }
 
-
-  const convertedLateAbsences =
-    Math.floor(
-      currentLate /
-      latePerAbsence
-    );
-
-
-  const effectiveAbsences =
-    currentAbsences +
-    convertedLateAbsences;
-
-
-  const remainingAbsenceCount =
-    maxAbsences -
-    effectiveAbsences;
-
-
-  const lateRemainder =
-    currentLate %
-    latePerAbsence;
-
-
-  let remainingLateCount;
-
-  if (remainingAbsenceCount < 0) {
-
-    remainingLateCount = 0;
-
-  } else {
-
-    remainingLateCount =
-      (
-        remainingAbsenceCount *
-        latePerAbsence
-      ) +
-      (
-        latePerAbsence -
-        1 -
-        lateRemainder
-      );
-
-  }
-
-
-  const message =
-    document.getElementById("resultMessage");
-
-  message.className =
-    "result-main";
-
-
-  if (remainingAbsenceCount < 0) {
-
-    message.textContent =
-      "すでに出席条件を下回っています";
-
-    message.classList.add("danger");
-
-  }
-
-  else if (remainingLateCount === 0) {
-
-    message.textContent =
-      "これ以上遅刻すると危険です";
-
-    message.classList.add("warning");
-
-  }
-
-  else if (remainingLateCount === 1) {
-
-    message.textContent =
-      "あと1回だけ遅刻できます";
-
-    message.classList.add("warning");
-
-  }
-
-  else {
-
-    message.textContent =
-      `あと ${remainingLateCount}回 遅刻できます`;
-
-    message.classList.add("success");
-
-  }
-
-
-  document
-    .getElementById("maxAbsences")
-    .textContent =
-    maxAbsences + "回";
-
-
-  document
-    .getElementById("shownAbsences")
-    .textContent =
-    currentAbsences + "回";
-
-
-  document
-    .getElementById("shownLate")
-    .textContent =
-    currentLate + "回";
-
-
-  document
-    .getElementById("convertedAbsences")
-    .textContent =
-    effectiveAbsences + "回";
-
-
-  document
-    .getElementById("remainingLate")
-    .textContent =
-    Math.max(
-      remainingLateCount,
-      0
-    ) + "回";
-
-
-  document
-    .getElementById("remainingAbsences")
-    .textContent =
-    Math.max(
-      remainingAbsenceCount,
-      0
-    ) + "回";
-
-
-  document
-    .getElementById("result")
-    .style.display =
-    "block";
-}
-
+      result.style.display = "block";
+      result.scrollIntoView({behavior: "smooth", block: "start"});
+    } catch (e) {
+      error.textContent = e.message;
+    }
+  });
 </script>
-
 </body>
 </html>
